@@ -1,6 +1,7 @@
-package com.not2excel.commandAPI.handler;
+package com.not2excel.api.command.handler;
 
-import com.not2excel.commandAPI.objects.CommandInfo;
+import com.not2excel.api.command.objects.CommandInfo;
+import com.not2excel.api.util.Colorizer;
 
 /**
  * @author Richmond Steele
@@ -13,6 +14,6 @@ public class ErrorHandler implements Handler
     @Override
     public void handleCommand(CommandInfo info) throws CommandException
     {
-        throw new CommandException("§cFailed to handle command properly.");
+        throw new CommandException(Colorizer.formatColors("<red>Failed to handle command properly."));
     }
 }

@@ -1,4 +1,4 @@
-package com.not2excel.commandAPI.logging;
+package com.not2excel.api.logging;
 
 /**
  * @author Richmond Steele

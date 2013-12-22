@@ -1,4 +1,4 @@
-package com.not2excel.commandAPI.handler;
+package com.not2excel.api.command.handler;
 
 /**
  * @author Richmond Steele

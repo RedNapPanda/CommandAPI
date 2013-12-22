@@ -1,4 +1,4 @@
-package com.not2excel.commandAPI.logging;
+package com.not2excel.api.logging;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

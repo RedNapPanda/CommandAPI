@@ -1,4 +1,4 @@
-package com.not2excel.commandAPI.objects;
+package com.not2excel.api.command.objects;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

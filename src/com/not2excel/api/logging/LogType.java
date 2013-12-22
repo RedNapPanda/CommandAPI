@@ -1,6 +1,6 @@
-package com.not2excel.commandAPI.logging;
+package com.not2excel.api.logging;
 
-import com.not2excel.commandAPI.utils.StringUtil;
+import com.not2excel.api.util.StringUtil;
 
 /**
  * @author Richmond Steele

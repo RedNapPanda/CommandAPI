@@ -1,4 +1,4 @@
-package com.not2excel.commandAPI;
+package com.not2excel.api.command;
 
 /**
  * Implement this so that the CommandManager can load commands from this class

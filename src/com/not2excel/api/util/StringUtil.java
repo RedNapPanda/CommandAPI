@@ -1,4 +1,4 @@
-package com.not2excel.commandAPI.utils;
+package com.not2excel.api.util;
 
 import java.util.Random;
 

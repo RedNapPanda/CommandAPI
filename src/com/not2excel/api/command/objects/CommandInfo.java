@@ -1,9 +1,7 @@
-package com.not2excel.commandAPI.objects;
+package com.not2excel.api.command.objects;
 
-
-import com.not2excel.commandAPI.CommandHandler;
+import com.not2excel.api.command.CommandHandler;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * @author Richmond Steele
@@ -14,24 +12,35 @@ import org.bukkit.entity.Player;
 public class CommandInfo
 {
     private final RegisteredCommand registeredCommand;
+    private final Parent            parent;
     private final CommandHandler    commandHandler;
     private final CommandSender     sender;
     private final String            command;
     private final String[]          args;
+    private final String            usage;
+    private final String            permission;
 
-    public CommandInfo(RegisteredCommand registeredCommand, CommandHandler commandHandler, CommandSender sender,
-                       String command, String[] args)
+    public CommandInfo(RegisteredCommand registeredCommand, Parent parent, CommandHandler commandHandler,
+                       CommandSender sender, String command, String[] args, String usage, String permission)
     {
         this.registeredCommand = registeredCommand;
+        this.parent = parent;
         this.commandHandler = commandHandler;
         this.sender = sender;
         this.command = command;
         this.args = args;
+        this.usage = usage;
+        this.permission = permission;
     }
 
     public RegisteredCommand getRegisteredCommand()
     {
         return registeredCommand;
+    }
+
+    public Parent getParent()
+    {
+        return parent;
     }
 
     public CommandHandler getCommandHandler()
@@ -56,31 +65,37 @@ public class CommandInfo
 
     public String getPermission()
     {
+        if (commandHandler == null)
+        {
+            return permission;
+        }
         return commandHandler.permission();
     }
 
     public String noPermission()
     {
+        if (commandHandler == null)
+        {
+            return "";
+        }
         return commandHandler.noPermission();
     }
 
     public String getUsage()
     {
+        if (commandHandler == null)
+        {
+            return usage;
+        }
         return commandHandler.usage();
     }
 
     public String getDescription()
     {
+        if (commandHandler == null)
+        {
+            return "";
+        }
         return commandHandler.description();
-    }
-
-    public Player getPlayer()
-    {
-        return isPlayer() ? (Player) sender : null;
-    }
-
-    public boolean isPlayer()
-    {
-        return sender instanceof Player;
     }
 }

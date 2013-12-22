@@ -1,4 +1,4 @@
-package com.not2excel.commandAPI;
+package com.not2excel.api.command;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

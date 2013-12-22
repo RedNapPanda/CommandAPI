@@ -1,12 +1,11 @@
-package com.not2excel.commandAPI;
+package com.not2excel.api.command;
 
-
-import com.not2excel.commandAPI.handler.DefaultHandler;
-import com.not2excel.commandAPI.logging.LevelLogger;
-import com.not2excel.commandAPI.logging.LogType;
-import com.not2excel.commandAPI.objects.*;
-import com.not2excel.commandAPI.utils.ClassEnumerator;
-import com.not2excel.commandAPI.utils.ReflectionUtils;
+import com.not2excel.api.command.handler.DefaultHandler;
+import com.not2excel.api.command.objects.*;
+import com.not2excel.api.logging.LevelLogger;
+import com.not2excel.api.logging.LogType;
+import com.not2excel.api.reflection.ClassEnumerator;
+import com.not2excel.api.reflection.ReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -32,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CommandManager
 {
+    private final double version = 1.1;
     private final Plugin plugin;
     private final Map<Integer, List<QueuedCommand>> queuedCommands     =
             new ConcurrentHashMap<Integer, List<QueuedCommand>>();
@@ -153,6 +153,7 @@ public class CommandManager
                         {
                             logger.log("Registering Empty Base Command: " + list[0]);
                             RegisteredCommand registeredEmpty = new RegisteredCommand(null);
+                            registeredEmpty.setCommand(list[0]);
                             synchronized (registeredCommands)
                             {
                                 registeredCommands.put(list[0], registeredEmpty);
@@ -173,9 +174,9 @@ public class CommandManager
                     {
                         registerChild(queue, commandHandler, registered, s);
                     }
-                    logger.log("Registered queued command: " + commandHandler.command());
                 }
             }
+            queuedCommands.clear();
         }
     }
 
@@ -184,24 +185,101 @@ public class CommandManager
     {
         ChildCommand child = new ChildCommand(commandHandler);
         Parent parent = recursivelyFindInnerMostParent(commandHandler.command(), registered, 1);
+        String[] list = commandHandler.command().split("\\.");
         if (parent.getClass().equals(registered.getClass()))
         {
+            if(!registered.getCommandHandler().command().equals(list[list.length - 2 <= 0 ? 0 : list.length - 2]))
+            {
+                List<String> indexer = Arrays.asList(list);
+                int index = indexer.indexOf(registered.getCommandHandler().command());
+                String s1 = list[index + 1];
+                DefaultChildCommand dummyChild = new DefaultChildCommand(s1);
+                dummyChild.setPermission(registered.getPermission());
+                registered.addChild(s1, dummyChild);
+                registered.getChild(s1).setHandler(new DefaultHandler(null));
+                registerChild(queue, commandHandler, registered, s);
+                s1 = "";
+                for(String s2 : indexer)
+                {
+                    if(indexer.indexOf(s2) < index + 1)
+                    {
+                        s1 += s2 + ".";
+                    }
+                }
+                logger.log("Generated and Registered DummyChild: " + s1.substring(0, s1.length() - 1));
+                return;
+            }
             registered.addChild(s, child);
             registered.getChild(s).setHandler(new DefaultHandler(queue));
+            logger.log("Registered queued command: " + commandHandler.command());
+        }
+        else if(parent.getClass().equals(DefaultChildCommand.class))
+        {
+            DefaultChildCommand childParent = (DefaultChildCommand) parent;
+            if(!childParent.getCommand().equals(list[list.length - 2 <= 0 ? 0 : list.length - 2]))
+            {
+                List<String> indexer = Arrays.asList(list);
+                int index = indexer.indexOf(registered.getCommandHandler().command());
+                String s1 = list[index + 1];
+                DefaultChildCommand dummyChild = new DefaultChildCommand(s1);
+                dummyChild.setPermission(childParent.getPermission());
+                childParent.addChild(s1, dummyChild);
+                childParent.getChild(s1).setHandler(new DefaultHandler(null));
+                registerChild(queue, commandHandler, registered, s);
+                s1 = "";
+                for(String s2 : indexer)
+                {
+                    if(indexer.indexOf(s2) < index + 1)
+                    {
+                        s1 += s2 + ".";
+                    }
+                }
+                logger.log("Generated and Registered DummyChild: " + s1.substring(0, s1.length() - 1));
+                return;
+            }
+            childParent.addChild(s, child);
+            childParent.getChild(s).setHandler(new DefaultHandler(queue));
+            logger.log("Registered queued command: " + commandHandler.command());
         }
         else
         {
             ChildCommand childParent = (ChildCommand) parent;
+            if(!childParent.getCommand().equals(list[list.length - 2 <= 0 ? 0 : list.length - 2]))
+            {
+                List<String> indexer = Arrays.asList(list);
+                int index = indexer.indexOf(registered.getCommandHandler().command());
+                String s1 = list[index + 1];
+                DefaultChildCommand dummyChild = new DefaultChildCommand(s1);
+                dummyChild.setPermission(childParent.getPermission());
+                childParent.addChild(s1, dummyChild);
+                childParent.getChild(s1).setHandler(new DefaultHandler(null));
+                registerChild(queue, commandHandler, registered, s);
+                s1 = "";
+                for(String s2 : indexer)
+                {
+                    if(indexer.indexOf(s2) < index + 1)
+                    {
+                        s1 += s2 + ".";
+                    }
+                }
+                logger.log("Generated and Registered DummyChild: " + s1.substring(0, s1.length() - 1));
+                return;
+            }
             childParent.addChild(s, child);
             childParent.getChild(s).setHandler(new DefaultHandler(queue));
+            logger.log("Registered queued command: " + commandHandler.command());
         }
     }
 
     private Parent recursivelyFindInnerMostParent(String command, Parent parent, int start)
     {
         String[] list = command.split("\\.");
+        if(start > list.length - 1)
+        {
+            return parent;
+        }
         return parent.hasChild(list[start]) ?
-               recursivelyFindInnerMostParent(list[start], parent.getChild(list[start]), ++start) :
+               recursivelyFindInnerMostParent(command, parent.getChild(list[start]), ++start) :
                parent;
     }
 

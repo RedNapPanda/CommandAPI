@@ -1,6 +1,6 @@
-package com.not2excel.commandAPI.handler;
+package com.not2excel.api.command.handler;
 
-import com.not2excel.commandAPI.objects.CommandInfo;
+import com.not2excel.api.command.objects.CommandInfo;
 
 /**
  * @author Richmond Steele
