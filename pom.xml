@@ -48,7 +48,7 @@
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.9</version>
                 <configuration>
-                    <message>Added Artifacts for ${project.artifactId} ${project.version}</message>
+                    <message>Added Artifacts</message>
                     <outputDirectory>${project.build.directory}/repo</outputDirectory>
                     <branch>refs/heads/master</branch>
                     <includes><include>**/*</include></includes>
