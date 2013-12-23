@@ -1,10 +1,10 @@
 language: java
 jdk:
-  - oraclejdk7
-script: "mvn clean deploy --settings settings.xml"
+- oraclejdk7
+script: mvn clean deploy --settings settings.xml
 notifications:
   email: false
 env:
   global:
-    - secure: "ZWyGkkpUnEZH4m6+QPbKN1ZZ6Jn9DbztZxImumi67wqg2rauvGaGLqoH82OdxHN8paplfZdY1Q1mWyNL+3PpX/+jiXWdZalK46+1ApVWcj2BOBWs+NHVPs7RBMCZ1GXfX54ux4VpXFmEK6cHSC3Z6Td53Z94EsSQuqJKZuARMNY="
-    - secure: "GASFvzkohuUnSesHoPVb/ClNd5lQKqTck/m4nlkPBGkMnLljj5SidkqHSU88lMZcbx7nCJn5NOpK44soAolSRs3ezuBiPOq2qMmmC5jrZG39mUyifB4ESmeVvNBRb4poV18b4lHkSML/8xHlsZBr7Ze1CiiWOBZrBP9vKJxvGw8="
+  - secure: P/u3Iz4M6GS27m6W3GLBcsE455T3Al0h4V41zSM9xDYxISEIHd/ElZUcIfX6RKJmcvSzImMebkDD2bueNFOaBFBw81ICwimIt+RbBMwRPFZDKba48aa4QdTD0nb5tVfRNvRiBa+gVfysQl8NtNO+cB0+Ob3znqbZGGqrCMK8Tc0=
+  - secure: NVM6tKlgGQYqNvoFK9C2lsYjNjAr6DWCmBX5lomQjdo6FPAeRv9aZSymrp/FSvVzr2zoViGHuvW3nka7h7oapd6AtqJ1KkbFhdE1jglPwKcj2JbkxEjmPCPTWbZSlYKpSoGF11sRxljp+/mpQmRe8I0K9Hp/ttaXrPTcMxjiNzc=
