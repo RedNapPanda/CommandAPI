@@ -1,10 +1,11 @@
 language: java
 jdk:
 - oraclejdk7
-script: mvn clean deploy --settings settings.xml
+before_install: git clone -b travis `git config --get remote.origin.url` target/travis
+script: mvn clean deploy --settings target/travis/settings.xml
 notifications:
   email: false
 env:
   global:
-  - secure: P/u3Iz4M6GS27m6W3GLBcsE455T3Al0h4V41zSM9xDYxISEIHd/ElZUcIfX6RKJmcvSzImMebkDD2bueNFOaBFBw81ICwimIt+RbBMwRPFZDKba48aa4QdTD0nb5tVfRNvRiBa+gVfysQl8NtNO+cB0+Ob3znqbZGGqrCMK8Tc0=
-  - secure: NVM6tKlgGQYqNvoFK9C2lsYjNjAr6DWCmBX5lomQjdo6FPAeRv9aZSymrp/FSvVzr2zoViGHuvW3nka7h7oapd6AtqJ1KkbFhdE1jglPwKcj2JbkxEjmPCPTWbZSlYKpSoGF11sRxljp+/mpQmRe8I0K9Hp/ttaXrPTcMxjiNzc=
+  - secure: "Cy0T7gOU3eVi+EsB5hefoOoJm/qzq4GsZpvbGViLDqgcGXotITuaXh318HBfrbM6DRni7i5xJ4CViMm0tycWBTxSER0oNg1x1f5t0lV3v60MX/TLE9wg/ZD9Ax7cTiK6evPucCQHJvkvonVHhzTYeeftoGD8d/BsD5Knm5I+5KA="
+  - secure: "HMeTEEx1HQ+BTLZboxl5WQdR2Xiz6fVtVd4SV0THdRrOfNAJ6YPgketXSFtg8RQj0/senuQth/zl/pqz+CbucBYJL3sSdtUAyp4Txsauny1YwA1gMdNT+uO1E9gdSXCoELpBXD6EFR9V8wnRG7eUJ2UNQzF8ME0X6+qQ5CkXEOY="
