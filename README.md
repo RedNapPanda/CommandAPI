@@ -44,6 +44,16 @@ public class TestCommand implements CommandListener //CommandListener is require
 }
 ```
 
+__ChangeLog:__
+    1.2:
+        Added Maven Support
+    1.1:
+        Updated recursion to fix bug with sub commands below sub-2.
+        Now properly displays help when displaying usage for sub commands
+        Generates empty(default) sub commands if you don't create an annotation for them.
+    1.0:
+        Initial release.
+
 __Source Code:__ Finally the source code is on github.  Its opensource and GPLv2 license.
 https://github.com/Not2EXceL/CommandAPI
 Duh its here XD
