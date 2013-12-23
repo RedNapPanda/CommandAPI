@@ -1,5 +1,6 @@
-CommandAPI
+CommandAPI 
 ==========
+[![Build Status](https://travis-ci.org/Not2EXceL/CommandAPI.png?branch=master)](https://travis-ci.org/Not2EXceL/CommandAPI)
 
 __About:__ This is a CommandAPI that I developed so that I can avoid having to statically register any command whether using reflection and a CommandExecutor, or simply putting the commands into my plugin.yml. This is a purely annotation based API.  The functionality to statically add commands is there, I just have not implemented any ways that are easy for a user to do so. 
 
