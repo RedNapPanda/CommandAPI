@@ -1,0 +1,67 @@
+package com.not2excel.api.command;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * @author Richmond Steele
+ * @since 12/16/13
+ * All rights Reserved
+ * Please read included LICENSE file
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CommandHandler
+{
+    /**
+     * Label of the command
+     * Sub-commands have '.' to split the child from the parent
+     * /test => test
+     * /test set => test.set
+     *
+     * @return command label
+     */
+    String command();
+
+    /**
+     * Aliases of the command
+     * /test2 => /test
+     * /test set2 => /test set
+     *
+     * @return command aliases
+     */
+    String[] aliases() default {};
+
+    /**
+     * Permission to use this command
+     *
+     * @return permission
+     */
+    String permission() default "";
+
+    /**
+     * Message to send to CommandSender if they do not have permission to use this command
+     *
+     * @return noPermission message
+     */
+    String noPermission() default "You don't have permission to do that.";
+
+    /**
+     * Usage for the command
+     * /test
+     * /test set [player]
+     *
+     * @return command usage
+     */
+    String usage() default "";
+
+    /**
+     * Description of command
+     * /test => Testing the dynamic CommandAPI
+     *
+     * @return command description
+     */
+    String description() default "";
+}
