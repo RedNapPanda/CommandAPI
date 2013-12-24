@@ -2,6 +2,7 @@ package com.not2excel.api.command.objects;
 
 import com.not2excel.api.command.CommandHandler;
 import com.not2excel.api.command.handler.CommandException;
+import com.not2excel.api.command.handler.DefaultHandler;
 import com.not2excel.api.command.handler.Handler;
 import com.not2excel.api.util.Colorizer;
 import org.bukkit.command.Command;
@@ -10,6 +11,9 @@ import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map.Entry;
 
 /**
@@ -27,26 +31,42 @@ public class RegisteredCommand extends Parent implements CommandExecutor, Handle
     public RegisteredCommand(QueuedCommand queuedCommand)
     {
         this.queuedCommand = queuedCommand;
+        this.setHandler(new DefaultHandler(queuedCommand));
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] strings)
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
     {
-        processCommand(sender, command, s, strings);
+
+//        processCommand(sender, command, s, args);
+        try
+        {
+            CommandHandler commandHandler = getMethod().getAnnotation(CommandHandler.class);
+            List<String> strings = Arrays.asList(args);
+            getHandler().handleCommand(new CommandInfo(this, this, commandHandler, sender, s,
+                                                       sortQuotedArgs(strings), commandHandler.usage(),
+                                                       commandHandler.permission()));
+        }
+        catch (CommandException e)
+        {
+            Colorizer.send(sender, "<red>Failed to handle command properly.");
+        }
         return true;
     }
 
-    private void processCommand(CommandSender sender, Command command, String s, String[] strings)
+    private void processCommand(CommandSender sender, Command command, String s, String[] args)
     {
-        if (strings.length == 0)
+        List<String> strings = Arrays.asList(args);
+        if (strings.size() == 0)
         {
             if (queuedCommand != null)
             {
                 try
                 {
                     CommandHandler commandHandler = getMethod().getAnnotation(CommandHandler.class);
-                    getHandler().handleCommand(new CommandInfo(this, this, commandHandler, sender, s, strings,
-                                                               commandHandler.usage(), commandHandler.permission()));
+                    getHandler().handleCommand(new CommandInfo(this, this, commandHandler, sender, s,
+                                                               sortQuotedArgs(strings), commandHandler.usage(),
+                                                               commandHandler.permission()));
                 }
                 catch (CommandException e)
                 {
@@ -58,9 +78,9 @@ public class RegisteredCommand extends Parent implements CommandExecutor, Handle
                 displayDefaultUsage(sender, s, this);
             }
         }
-        if (strings.length > 0)
+        if (strings.size() > 0)
         {
-            if (strings[0].equalsIgnoreCase("help") && !childCommands.containsKey("help"))
+            if (strings.get(0).equalsIgnoreCase("help") && !childCommands.containsKey("help"))
             {
                 if (command.getUsage().equals(""))
                 {
@@ -74,7 +94,7 @@ public class RegisteredCommand extends Parent implements CommandExecutor, Handle
             }
             synchronized (childCommands)
             {
-                ChildCommand child = childCommands.get(strings[0]);
+                ChildCommand child = childCommands.get(strings.get(0));
                 if (child == null)
                 {
                     if (command.getUsage().equals(""))
@@ -91,9 +111,8 @@ public class RegisteredCommand extends Parent implements CommandExecutor, Handle
                 {
                     Colorizer.send(sender, "<red>" + child.getCommandHandler().noPermission());
                 }
-                String[] args = new String[strings.length - 1];
-                System.arraycopy(strings, 1, args, 0, strings.length - 1);
-                CommandInfo info = new CommandInfo(this, child, child.getCommandHandler(), sender, strings[0], args,
+                CommandInfo info = new CommandInfo(this, child, child.getCommandHandler(), sender, strings.get(0),
+                                                   strings.subList(1, strings.size() - 1),
                                                    child.getUsage(), child.getPermission());
                 try
                 {
@@ -171,6 +190,48 @@ public class RegisteredCommand extends Parent implements CommandExecutor, Handle
                 recursivelyDisplayChildUsage(sender, entry.getValue(), prefix);
             }
         }
+    }
+
+    public List<String> sortQuotedArgs(List<String> args)
+    {
+        return sortEnclosedArgs(args, '"');
+    }
+
+    private List<String> sortEnclosedArgs(List<String> args, char c)
+    {
+        List<String> strings = new ArrayList<String>(args.size());
+        for (int i = 1; i < args.size(); ++i)
+        {
+            String arg = args.get(i);
+            if (arg.length() == 0)
+            {
+                continue;
+            }
+            if (arg.charAt(0) == c)
+            {
+                int j;
+                final StringBuilder builder = new StringBuilder();
+                for (j = i + 1; j < args.size(); ++j)
+                {
+                    String arg2 = args.get(j);
+                    if (arg2.charAt(arg2.length() - 1) == c && arg2.length() > 1)
+                    {
+                        builder.append(j != i ? " " : "").append(arg2.substring(j == i ? 1 : 0, arg2.length() - 1));
+                    }
+                    else
+                    {
+                        builder.append(j == i ? arg2.substring(1) : " " + arg2);
+                    }
+                }
+                if (j < args.size())
+                {
+                    arg = builder.toString();
+                    i = j;
+                }
+            }
+            strings.add(arg);
+        }
+        return strings;
     }
 
     private Method getMethod()

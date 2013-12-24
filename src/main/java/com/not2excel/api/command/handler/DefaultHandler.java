@@ -7,6 +7,7 @@ import com.not2excel.api.command.objects.QueuedCommand;
 import com.not2excel.api.util.Colorizer;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * @author Richmond Steele
@@ -26,14 +27,27 @@ public class DefaultHandler implements Handler
     @Override
     public void handleCommand(CommandInfo info) throws CommandException
     {
-        String[] strings = info.getArgs();
+        List<String> strings = info.getArgs();
         Parent parent = info.getParent();
         String command = info.getCommand();
 
-        if (strings.length == 0 || parent.getChildCommands().size() == 0)
+        if (strings.size() == 0 || parent.getChildCommands().size() == 0)
         {
             if (queue != null)
             {
+                if (info.getArgsLength() < info.getCommandHandler().min())
+                {
+                    info.getSender().sendMessage("Too few arguments.");
+                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
+                    throw new CommandException("Too few arguments.");
+                }
+                if (info.getCommandHandler().max() != -1 && info.getArgsLength() > info.getCommandHandler().max())
+                {
+                    info.getSender().sendMessage("Too many arguments.");
+                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
+                    throw new CommandException("Too many arguments.");
+                }
+                info.setArgs(info.getRegisteredCommand().sortQuotedArgs(info.getArgs()));
                 try
                 {
                     queue.getMethod().invoke(queue.getObject(), info);
@@ -52,9 +66,9 @@ public class DefaultHandler implements Handler
                 info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
             }
         }
-        if (strings.length > 0)
+        if (strings.size() > 0)
         {
-            if (strings[0].equalsIgnoreCase("help") && !parent.getChildCommands().containsKey("help"))
+            if (strings.get(0).equalsIgnoreCase("help") && !parent.getChildCommands().containsKey("help"))
             {
                 if (info.getUsage().equals(""))
                 {
@@ -68,7 +82,7 @@ public class DefaultHandler implements Handler
             }
             synchronized (parent.getChildCommands())
             {
-                ChildCommand child = parent.getChildCommands().get(strings[0]);
+                ChildCommand child = parent.getChildCommands().get(strings.get(0));
                 if (child == null)
                 {
                     if (info.getUsage().equals(""))
@@ -85,10 +99,10 @@ public class DefaultHandler implements Handler
                 {
                     Colorizer.send(info.getSender(), "<red>" + child.getCommandHandler().noPermission());
                 }
-                String[] args = new String[strings.length - 1];
-                System.arraycopy(strings, 1, args, 0, strings.length - 1);
                 CommandInfo cmdInfo = new CommandInfo(info.getRegisteredCommand(), child, child.getCommandHandler(),
-                                                      info.getSender(), strings[0], args, info.getUsage(),
+                                                      info.getSender(), strings.get(0),
+                                                      strings.subList(1, strings.size() - 1),
+                                                      info.getUsage(),
                                                       info.getPermission());
                 try
                 {

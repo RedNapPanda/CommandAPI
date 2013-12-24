@@ -64,4 +64,18 @@ public @interface CommandHandler
      * @return command description
      */
     String description() default "";
+
+    /**
+     * Minimum arguments the command must have
+     * must be > 0
+     * @return min
+     */
+    int min() default 0;
+
+    /**
+     * Max arguments the command can have
+     * -1 is unlimited
+     * @return max
+     */
+    int max() default -1;
 }

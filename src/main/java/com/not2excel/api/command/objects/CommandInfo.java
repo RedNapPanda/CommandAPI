@@ -1,7 +1,10 @@
 package com.not2excel.api.command.objects;
 
 import com.not2excel.api.command.CommandHandler;
+import com.not2excel.api.command.handler.CommandException;
 import org.bukkit.command.CommandSender;
+
+import java.util.List;
 
 /**
  * @author Richmond Steele
@@ -16,12 +19,12 @@ public class CommandInfo
     private final CommandHandler    commandHandler;
     private final CommandSender     sender;
     private final String            command;
-    private final String[]          args;
     private final String            usage;
     private final String            permission;
+    private       List<String>          args;
 
     public CommandInfo(RegisteredCommand registeredCommand, Parent parent, CommandHandler commandHandler,
-                       CommandSender sender, String command, String[] args, String usage, String permission)
+                       CommandSender sender, String command, List<String> args, String usage, String permission)
     {
         this.registeredCommand = registeredCommand;
         this.parent = parent;
@@ -58,9 +61,19 @@ public class CommandInfo
         return command;
     }
 
-    public String[] getArgs()
+    public List<String> getArgs()
     {
         return args;
+    }
+
+    public void setArgs(List<String> args)
+    {
+        this.args = args;
+    }
+
+    public int getArgsLength()
+    {
+        return args.size();
     }
 
     public String getPermission()
@@ -97,5 +110,110 @@ public class CommandInfo
             return "";
         }
         return commandHandler.description();
+    }
+
+    public String getIndex(int index) throws CommandException
+    {
+        if(index > args.size())
+        {
+            throw new CommandException(sender, "<red>Invalid index number");
+        }
+        return args.get(index);
+    }
+
+    public String getIndex(int index, String defaultString)
+    {
+        if(index > args.size())
+        {
+            return defaultString;
+        }
+        return args.get(index);
+    }
+
+    public int getInt(int index) throws CommandException
+    {
+        if(index > args.size())
+        {
+            throw new CommandException(sender, "<red>Invalid index number");
+        }
+        int returnValue;
+        try
+        {
+            returnValue = Integer.parseInt(args.get(index));
+        }
+        catch(NumberFormatException e)
+        {
+            throw new CommandException(sender, "<red>Index <gold>%d<red> is not an Integer", index);
+        }
+        return returnValue;
+    }
+
+    public int getInt(int index, int defaultValue)
+    {
+        if(index > args.size())
+        {
+            return defaultValue;
+        }
+        try
+        {
+            return Integer.parseInt(args.get(index));
+        }
+        catch(NumberFormatException e)
+        {
+            return defaultValue;
+        }
+    }
+
+    public double getDouble(int index) throws CommandException
+    {
+        if(index > args.size())
+        {
+            throw new CommandException(sender, "<red>Invalid index number");
+        }
+        double returnValue;
+        try
+        {
+            returnValue = Double.parseDouble(args.get(index));
+        }
+        catch(NumberFormatException e)
+        {
+            throw new CommandException(sender, "<red>Index <gold>%d<red> is not an Double", index);
+        }
+        return returnValue;
+    }
+
+    public double getDouble(int index, double defaultValue)
+    {
+        if(index > args.size())
+        {
+            return defaultValue;
+        }
+        try
+        {
+            return Double.parseDouble(args.get(index));
+        }
+        catch(NumberFormatException e)
+        {
+            return defaultValue;
+        }
+    }
+
+    public String joinArgs(int index) throws CommandException
+    {
+        if(index > args.size())
+        {
+            throw new CommandException(sender, "<red>Invalid index number");
+        }
+        StringBuilder builder = new StringBuilder();
+        for(int i = index; i < args.size(); ++i)
+        {
+            String arg = args.get(i);
+            if(i != index)
+            {
+                builder.append(" ");
+            }
+            builder.append(arg);
+        }
+        return builder.toString();
     }
 }
