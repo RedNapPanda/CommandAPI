@@ -2,7 +2,7 @@ package com.not2excel.api.command.handler;
 
 import com.not2excel.api.command.objects.ChildCommand;
 import com.not2excel.api.command.objects.CommandInfo;
-import com.not2excel.api.command.objects.Parent;
+import com.not2excel.api.command.objects.ParentCommand;
 import com.not2excel.api.command.objects.QueuedCommand;
 import com.not2excel.api.util.Colorizer;
 
@@ -28,7 +28,7 @@ public class DefaultHandler implements Handler
     public void handleCommand(CommandInfo info) throws CommandException
     {
         List<String> strings = info.getArgs();
-        Parent parent = info.getParent();
+        ParentCommand parent = info.getParent();
         String command = info.getCommand();
 
         if (strings.size() == 0 || parent.getChildCommands().size() == 0)
@@ -48,6 +48,11 @@ public class DefaultHandler implements Handler
                     throw new CommandException("Too many arguments.");
                 }
                 info.setArgs(info.getRegisteredCommand().sortQuotedArgs(info.getArgs()));
+                if (!info.getSender().hasPermission(info.getCommandHandler().permission()))
+                {
+                    Colorizer.send(info.getSender(), "<red>" + info.getCommandHandler().noPermission());
+                    return;
+                }
                 try
                 {
                     queue.getMethod().invoke(queue.getObject(), info);
@@ -98,6 +103,7 @@ public class DefaultHandler implements Handler
                 if (!child.checkPermission(info.getSender()))
                 {
                     Colorizer.send(info.getSender(), "<red>" + child.getCommandHandler().noPermission());
+                    return;
                 }
                 CommandInfo cmdInfo = new CommandInfo(info.getRegisteredCommand(), child, child.getCommandHandler(),
                                                       info.getSender(), strings.get(0),

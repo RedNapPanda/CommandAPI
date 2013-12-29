@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
  * All rights Reserved
  * Please read included LICENSE file
  */
-public class ChildCommand extends Parent
+public class ChildCommand extends ParentCommand
 {
     private final CommandHandler commandHandler;
     protected String  command     = "";
@@ -97,7 +97,8 @@ public class ChildCommand extends Parent
         }
         else
         {
-            return commandHandler.command().split("\\.")[commandHandler.command().split("\\.").length];
+        	String[] list = commandHandler.command().split("\\.");
+            return list[list.length - 1 <= 0 ? 0 : list.length - 1];
         }
     }
 }

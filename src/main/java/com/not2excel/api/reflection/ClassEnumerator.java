@@ -122,14 +122,14 @@ public class ClassEnumerator
      *
      * @return class array
      */
-    public Class[] getClassesFromThisJar()
+    public Class[] getClassesFromThisJar(Object object)
     {
         final List<Class<?>> classes = new ArrayList<Class<?>>();
         ClassLoader classLoader = null;
         URI uri = null;
         try
         {
-            uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+            uri = object.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
             classLoader = new URLClassLoader(
                     new URL[]{uri.toURL()},
                     ClassEnumerator.class.getClassLoader());

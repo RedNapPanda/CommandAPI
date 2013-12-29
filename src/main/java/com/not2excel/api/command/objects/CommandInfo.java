@@ -3,6 +3,7 @@ package com.not2excel.api.command.objects;
 import com.not2excel.api.command.CommandHandler;
 import com.not2excel.api.command.handler.CommandException;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -15,15 +16,15 @@ import java.util.List;
 public class CommandInfo
 {
     private final RegisteredCommand registeredCommand;
-    private final Parent            parent;
+    private final ParentCommand     parent;
     private final CommandHandler    commandHandler;
     private final CommandSender     sender;
     private final String            command;
     private final String            usage;
     private final String            permission;
-    private       List<String>          args;
+    private       List<String>      args;
 
-    public CommandInfo(RegisteredCommand registeredCommand, Parent parent, CommandHandler commandHandler,
+    public CommandInfo(RegisteredCommand registeredCommand, ParentCommand parent, CommandHandler commandHandler,
                        CommandSender sender, String command, List<String> args, String usage, String permission)
     {
         this.registeredCommand = registeredCommand;
@@ -41,7 +42,7 @@ public class CommandInfo
         return registeredCommand;
     }
 
-    public Parent getParent()
+    public ParentCommand getParent()
     {
         return parent;
     }
@@ -54,6 +55,20 @@ public class CommandInfo
     public CommandSender getSender()
     {
         return sender;
+    }
+    
+    public Player getPlayer()
+    {
+    	if(isPlayer())
+    	{
+    		return (Player) sender;
+    	}
+    	return null;
+    }
+    
+    public boolean isPlayer()
+    {
+    	return sender instanceof Player;
     }
 
     public String getCommand()
