@@ -56,19 +56,19 @@ public class CommandInfo
     {
         return sender;
     }
-    
+
     public Player getPlayer()
     {
-    	if(isPlayer())
-    	{
-    		return (Player) sender;
-    	}
-    	return null;
+        if (isPlayer())
+        {
+            return (Player) sender;
+        }
+        return null;
     }
-    
+
     public boolean isPlayer()
     {
-    	return sender instanceof Player;
+        return sender instanceof Player;
     }
 
     public String getCommand()
@@ -129,7 +129,7 @@ public class CommandInfo
 
     public String getIndex(int index) throws CommandException
     {
-        if(index > args.size())
+        if (index > args.size())
         {
             throw new CommandException(sender, "<red>Invalid index number");
         }
@@ -138,7 +138,7 @@ public class CommandInfo
 
     public String getIndex(int index, String defaultString)
     {
-        if(index > args.size())
+        if (index > args.size())
         {
             return defaultString;
         }
@@ -147,7 +147,7 @@ public class CommandInfo
 
     public int getInt(int index) throws CommandException
     {
-        if(index > args.size())
+        if (index > args.size())
         {
             throw new CommandException(sender, "<red>Invalid index number");
         }
@@ -156,7 +156,7 @@ public class CommandInfo
         {
             returnValue = Integer.parseInt(args.get(index));
         }
-        catch(NumberFormatException e)
+        catch (NumberFormatException e)
         {
             throw new CommandException(sender, "<red>Index <gold>%d<red> is not an Integer", index);
         }
@@ -165,7 +165,7 @@ public class CommandInfo
 
     public int getInt(int index, int defaultValue)
     {
-        if(index > args.size())
+        if (index > args.size())
         {
             return defaultValue;
         }
@@ -173,7 +173,7 @@ public class CommandInfo
         {
             return Integer.parseInt(args.get(index));
         }
-        catch(NumberFormatException e)
+        catch (NumberFormatException e)
         {
             return defaultValue;
         }
@@ -181,7 +181,7 @@ public class CommandInfo
 
     public double getDouble(int index) throws CommandException
     {
-        if(index > args.size())
+        if (index > args.size())
         {
             throw new CommandException(sender, "<red>Invalid index number");
         }
@@ -190,7 +190,7 @@ public class CommandInfo
         {
             returnValue = Double.parseDouble(args.get(index));
         }
-        catch(NumberFormatException e)
+        catch (NumberFormatException e)
         {
             throw new CommandException(sender, "<red>Index <gold>%d<red> is not an Double", index);
         }
@@ -199,7 +199,7 @@ public class CommandInfo
 
     public double getDouble(int index, double defaultValue)
     {
-        if(index > args.size())
+        if (index > args.size())
         {
             return defaultValue;
         }
@@ -207,7 +207,7 @@ public class CommandInfo
         {
             return Double.parseDouble(args.get(index));
         }
-        catch(NumberFormatException e)
+        catch (NumberFormatException e)
         {
             return defaultValue;
         }
@@ -215,15 +215,15 @@ public class CommandInfo
 
     public String joinArgs(int index) throws CommandException
     {
-        if(index > args.size())
+        if (index > args.size())
         {
             throw new CommandException(sender, "<red>Invalid index number");
         }
         StringBuilder builder = new StringBuilder();
-        for(int i = index; i < args.size(); ++i)
+        for (int i = index; i < args.size(); ++i)
         {
             String arg = args.get(i);
-            if(i != index)
+            if (i != index)
             {
                 builder.append(" ");
             }
