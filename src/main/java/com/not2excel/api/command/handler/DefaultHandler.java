@@ -31,6 +31,8 @@ public class DefaultHandler implements Handler
         ParentCommand parent = info.getParent();
         String command = info.getCommand();
 
+        System.out.println(info.getCommand() + "; " + info.getArgs());
+
         if (strings.size() == 0 || parent.getChildCommands().size() == 0)
         {
             if (queue != null)
@@ -47,7 +49,7 @@ public class DefaultHandler implements Handler
                     info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
                     throw new CommandException("Too many arguments.");
                 }
-//                info.setArgs(info.getRegisteredCommand().sortQuotedArgs(info.getArgs()));
+//                info.setArgs(info.getRegisteredCommand().sortQuotedArgs(strings));
                 if (!info.getSender().hasPermission(info.getCommandHandler().permission()))
                 {
                     Colorizer.send(info.getSender(), "<red>" + info.getCommandHandler().noPermission());
