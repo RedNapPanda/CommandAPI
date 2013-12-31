@@ -47,7 +47,7 @@ public class DefaultHandler implements Handler
                     info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
                     throw new CommandException("Too many arguments.");
                 }
-                info.setArgs(info.getRegisteredCommand().sortQuotedArgs(info.getArgs()));
+//                info.setArgs(info.getRegisteredCommand().sortQuotedArgs(info.getArgs()));
                 if (!info.getSender().hasPermission(info.getCommandHandler().permission()))
                 {
                     Colorizer.send(info.getSender(), "<red>" + info.getCommandHandler().noPermission());
