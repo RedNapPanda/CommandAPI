@@ -9,15 +9,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * All rights Reserved
  * Please read included LICENSE file
  */
-public class ParentCommand
+public class Parent
 {
     protected final Map<String, ChildCommand> childCommands = new ConcurrentHashMap<String, ChildCommand>();
 
     public void addChild(String s, ChildCommand child)
     {
-        synchronized (childCommands)
         {
-            childCommands.put(s.toLowerCase(), child);
+            synchronized (childCommands)
+            {
+                childCommands.put(s.toLowerCase(), child);
+            }
         }
     }
 

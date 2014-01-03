@@ -22,7 +22,7 @@ import java.util.Map.Entry;
  * All rights Reserved
  * Please read included LICENSE file
  */
-public class RegisteredCommand extends ParentCommand implements CommandExecutor, Handler
+public class RegisteredCommand extends Parent implements CommandExecutor, Handler
 {
     private final QueuedCommand queuedCommand;
     private String  command = "";
@@ -37,8 +37,6 @@ public class RegisteredCommand extends ParentCommand implements CommandExecutor,
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
     {
-
-//        processCommand(sender, command, s, args);
         try
         {
             CommandHandler commandHandler = getMethod().getAnnotation(CommandHandler.class);
@@ -53,78 +51,6 @@ public class RegisteredCommand extends ParentCommand implements CommandExecutor,
         }
         return true;
     }
-
-//    private void processCommand(CommandSender sender, Command command, String s, String[] args)
-//    {
-//        List<String> strings = Arrays.asList(args);
-//        if (strings.size() == 0)
-//        {
-//            if (queuedCommand != null)
-//            {
-//                try
-//                {
-//                    CommandHandler commandHandler = getMethod().getAnnotation(CommandHandler.class);
-//                    getHandler().handleCommand(new CommandInfo(this, this, commandHandler, sender, s,
-//                                                               sortQuotedArgs(strings), commandHandler.usage(),
-//                                                               commandHandler.permission()));
-//                }
-//                catch (CommandException e)
-//                {
-//                    Colorizer.send(sender, "<red>Failed to handle command properly.");
-//                }
-//            }
-//            else
-//            {
-//                displayDefaultUsage(sender, s, this);
-//            }
-//        }
-//        if (strings.size() > 0)
-//        {
-//            if (strings.get(0).equalsIgnoreCase("help") && !childCommands.containsKey("help"))
-//            {
-//                if (command.getUsage().equals(""))
-//                {
-//                    displayDefaultUsage(sender, s, this);
-//                }
-//                else
-//                {
-//                    sender.sendMessage(command.getUsage());
-//                }
-//                return;
-//            }
-//            synchronized (childCommands)
-//            {
-//                ChildCommand child = childCommands.get(strings.get(0));
-//                if (child == null)
-//                {
-//                    if (command.getUsage().equals(""))
-//                    {
-//                        displayDefaultUsage(sender, s, this);
-//                    }
-//                    else
-//                    {
-//                        sender.sendMessage(command.getUsage());
-//                    }
-//                    return;
-//                }
-//                if (!child.checkPermission(sender))
-//                {
-//                    Colorizer.send(sender, "<red>" + child.getCommandHandler().noPermission());
-//                }
-//                CommandInfo info = new CommandInfo(this, child, child.getCommandHandler(), sender, strings.get(0),
-//                                                   strings.subList(1, strings.size() - 1),
-//                                                   child.getUsage(), child.getPermission());
-//                try
-//                {
-//                    child.getHandler().handleCommand(info);
-//                }
-//                catch (CommandException e)
-//                {
-//                    Colorizer.send(sender, "<red>Failed to handle command properly.");
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public void handleCommand(CommandInfo info) throws CommandException
@@ -143,7 +69,7 @@ public class RegisteredCommand extends ParentCommand implements CommandExecutor,
         }
     }
 
-    public void displayDefaultUsage(CommandSender sender, String command, ParentCommand parent)
+    public void displayDefaultUsage(CommandSender sender, String command, Parent parent)
     {
         String prefix;
         Colorizer.send(sender, "<cyan><=====EXceL Command API=====>");
@@ -177,7 +103,7 @@ public class RegisteredCommand extends ParentCommand implements CommandExecutor,
         return prefix;
     }
 
-    public void recursivelyDisplayChildUsage(CommandSender sender, ParentCommand parent, String prefix)
+    public void recursivelyDisplayChildUsage(CommandSender sender, Parent parent, String prefix)
     {
         for (Entry<String, ChildCommand> entry : parent.getChildCommands().entrySet())
         {
@@ -200,7 +126,7 @@ public class RegisteredCommand extends ParentCommand implements CommandExecutor,
     private List<String> sortEnclosedArgs(List<String> args, char c)
     {
         List<String> strings = new ArrayList<String>(args.size());
-        for (int i = 1; i < args.size(); ++i)
+        for (int i = 0; i < args.size(); ++i)
         {
             String arg = args.get(i);
             if (arg.length() == 0)
@@ -211,12 +137,13 @@ public class RegisteredCommand extends ParentCommand implements CommandExecutor,
             {
                 int j;
                 final StringBuilder builder = new StringBuilder();
-                for (j = i + 1; j < args.size(); ++j)
+                for (j = i; j < args.size(); ++j)
                 {
                     String arg2 = args.get(j);
-                    if (arg2.charAt(arg2.length() - 1) == c && arg2.length() > 1)
+                    if (arg2.charAt(arg2.length() - 1) == c && arg2.length() >= 1)
                     {
                         builder.append(j != i ? " " : "").append(arg2.substring(j == i ? 1 : 0, arg2.length() - 1));
+                        break;
                     }
                     else
                     {

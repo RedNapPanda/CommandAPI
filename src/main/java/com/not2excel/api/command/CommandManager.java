@@ -29,45 +29,47 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CommandManager
 {
-	private final double version = 1.1;
-	private final Plugin plugin;
-	private final Map<Integer, List<QueuedCommand>> queuedCommands = new ConcurrentHashMap<Integer, List<QueuedCommand>>();
-	private final Map<String, RegisteredCommand> registeredCommands = new ConcurrentHashMap<String, RegisteredCommand>();
-	private final LevelLogger logger;
-	private CommandMap commandMap;
+    private final double version = 1.1;
+    private final Plugin plugin;
+    private final Map<Integer, List<QueuedCommand>> queuedCommands     =
+            new ConcurrentHashMap<Integer, List<QueuedCommand>>();
+    private final Map<String, RegisteredCommand>    registeredCommands =
+            new ConcurrentHashMap<String, RegisteredCommand>();
+    private final LevelLogger logger;
+    private       CommandMap  commandMap;
 
-	public CommandManager(Plugin plugin)
-	{
-		this.plugin = plugin;
-		this.logger = LevelLogger.getInstance();
-		this.logger.setLogType("Command");
-		this.logger.setTimeStamped(false);
-	}
+    public CommandManager(Plugin plugin)
+    {
+        this.plugin = plugin;
+        this.logger = LevelLogger.getInstance();
+        this.logger.setLogType("Command");
+        this.logger.setTimeStamped(false);
+    }
 
-	public void registerHelp()
-	{
-		Set<HelpTopic> help = new TreeSet<HelpTopic>(
-				HelpTopicComparator.helpTopicComparatorInstance());
-		for (String s : registeredCommands.keySet())
-		{
-			Command cmd = commandMap.getCommand(s);
-			if (cmd != null)
-			{
-				HelpTopic topic = new GenericCommandHelpTopic(cmd);
-				help.add(topic);
-			}
-		}
-		IndexHelpTopic topic = new IndexHelpTopic(plugin.getName(),
-				"All commands for " + plugin.getName(), null, help,
-				"Below is a list of all " + plugin.getName() + " commands:");
-		Bukkit.getServer().getHelpMap().addTopic(topic);
-	}
+    public void registerHelp()
+    {
+        Set<HelpTopic> help = new TreeSet<HelpTopic>(
+                HelpTopicComparator.helpTopicComparatorInstance());
+        for (String s : registeredCommands.keySet())
+        {
+            Command cmd = commandMap.getCommand(s);
+            if (cmd != null)
+            {
+                HelpTopic topic = new GenericCommandHelpTopic(cmd);
+                help.add(topic);
+            }
+        }
+        IndexHelpTopic topic = new IndexHelpTopic(plugin.getName(),
+                                                  "All commands for " + plugin.getName(), null, help,
+                                                  "Below is a list of all " + plugin.getName() + " commands:");
+        Bukkit.getServer().getHelpMap().addTopic(topic);
+    }
 
-	public void registerCommands()
-	{
-		logger.log("WARNING: The CommandAPI cannot dynamically register commands from "
-				+ "classes that do not use the default constructor.");
-		logger.log("SOLUTION: Please use the static registrar registerCommands(object) if you need to register "
+    public void registerCommands()
+    {
+        logger.log("WARNING: The CommandAPI cannot dynamically register commands from "
+                   + "classes that do not use the default constructor.");
+        logger.log("SOLUTION: Please use the static registrar registerCommands(object) if you need to register "
 				+ "commands from classes that do not use the default constructor.");
 		Class[] classes = ClassEnumerator.getInstance().getClassesFromThisJar(
 				plugin);
@@ -191,7 +193,7 @@ public class CommandManager
 			String s)
 	{
 		ChildCommand child = new ChildCommand(commandHandler);
-		ParentCommand parent = recursivelyFindInnerMostParent(
+		Parent parent = recursivelyFindInnerMostParent(
 				commandHandler.command(), registered, 1);
 		String[] list = commandHandler.command().split("\\.");
 		if(list.length == 2)
@@ -295,8 +297,8 @@ public class CommandManager
 		}
 	}
 
-	private ParentCommand recursivelyFindInnerMostParent(String command,
-			ParentCommand parent, int start)
+	private Parent recursivelyFindInnerMostParent(String command,
+			Parent parent, int start)
 	{
 		String[] list = command.split("\\.");
 		if (start > list.length - 1)
@@ -404,7 +406,7 @@ public class CommandManager
 				try
 				{
 					Object field = ReflectionUtils.getField(plugin.getServer()
-							.getPluginManager(), "commandMap");
+                                                                  .getPluginManager(), "commandMap");
 					commandMap = (SimpleCommandMap) field;
 				}
 				catch (NoSuchFieldException e)
