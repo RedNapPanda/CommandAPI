@@ -22,7 +22,7 @@ import java.util.Map.Entry;
  * All rights Reserved
  * Please read included LICENSE file
  */
-public class RegisteredCommand extends Parent implements CommandExecutor, Handler
+public class RegisteredCommand extends ParentCommand implements CommandExecutor, Handler
 {
     private final QueuedCommand queuedCommand;
     private String  command = "";
@@ -69,7 +69,7 @@ public class RegisteredCommand extends Parent implements CommandExecutor, Handle
         }
     }
 
-    public void displayDefaultUsage(CommandSender sender, String command, Parent parent)
+    public void displayDefaultUsage(CommandSender sender, String command, ParentCommand parentCommand)
     {
         String prefix;
         Colorizer.send(sender, "<cyan><=====EXceL Command API=====>");
@@ -83,7 +83,7 @@ public class RegisteredCommand extends Parent implements CommandExecutor, Handle
             Colorizer.send(sender, "<purple>Usage for '%s'", command);
             prefix = recursivelyAddToPrefix(getCommand(), command);
         }
-        recursivelyDisplayChildUsage(sender, parent, prefix);
+        recursivelyDisplayChildUsage(sender, parentCommand, prefix);
     }
 
     public String recursivelyAddToPrefix(String prefix, String command)
@@ -103,9 +103,9 @@ public class RegisteredCommand extends Parent implements CommandExecutor, Handle
         return prefix;
     }
 
-    public void recursivelyDisplayChildUsage(CommandSender sender, Parent parent, String prefix)
+    public void recursivelyDisplayChildUsage(CommandSender sender, ParentCommand parentCommand, String prefix)
     {
-        for (Entry<String, ChildCommand> entry : parent.getChildCommands().entrySet())
+        for (Entry<String, ChildCommand> entry : parentCommand.getChildCommands().entrySet())
         {
             String usage = entry.getValue().getUsage();
             String description = entry.getValue().getDescription();

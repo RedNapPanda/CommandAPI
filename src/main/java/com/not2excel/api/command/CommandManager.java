@@ -193,7 +193,7 @@ public class CommandManager
 			String s)
 	{
 		ChildCommand child = new ChildCommand(commandHandler);
-		Parent parent = recursivelyFindInnerMostParent(
+		ParentCommand parentCommand = recursivelyFindInnerMostParent(
 				commandHandler.command(), registered, 1);
 		String[] list = commandHandler.command().split("\\.");
 		if(list.length == 2)
@@ -203,7 +203,7 @@ public class CommandManager
 			logger.log("Registered queued command: " + commandHandler.command());
 			return;
 		}
-		if (parent.getClass().equals(registered.getClass()))
+		if (parentCommand.getClass().equals(registered.getClass()))
 		{
 			if (!registered.getCommandHandler().command()
 					.equals(list[list.length - 2 <= 0 ? 0 : list.length - 2]))
@@ -233,9 +233,9 @@ public class CommandManager
 			registered.getChild(s).setHandler(new DefaultHandler(queue));
 			logger.log("Registered queued command: " + commandHandler.command());
 		}
-		else if (parent.getClass().equals(DefaultChildCommand.class))
+		else if (parentCommand.getClass().equals(DefaultChildCommand.class))
 		{
-			DefaultChildCommand childParent = (DefaultChildCommand) parent;
+			DefaultChildCommand childParent = (DefaultChildCommand) parentCommand;
 			if (!childParent.getCommand().equals(
 					list[list.length - 2 <= 0 ? 0 : list.length - 2]))
 			{
@@ -266,7 +266,7 @@ public class CommandManager
 		}
 		else
 		{
-			ChildCommand childParent = (ChildCommand) parent;
+			ChildCommand childParent = (ChildCommand) parentCommand;
 			if (!childParent.getCommand().equals(
 					list[list.length - 2 <= 0 ? 0 : list.length - 2]))
 			{
@@ -297,16 +297,16 @@ public class CommandManager
 		}
 	}
 
-	private Parent recursivelyFindInnerMostParent(String command,
-			Parent parent, int start)
+	private ParentCommand recursivelyFindInnerMostParent(String command,
+			ParentCommand parentCommand, int start)
 	{
 		String[] list = command.split("\\.");
 		if (start > list.length - 1)
 		{
-			return parent;
+			return parentCommand;
 		}
-		return parent.hasChild(list[start]) ? recursivelyFindInnerMostParent(
-				command, parent.getChild(list[start]), ++start) : parent;
+		return parentCommand.hasChild(list[start]) ? recursivelyFindInnerMostParent(
+				command, parentCommand.getChild(list[start]), ++start) : parentCommand;
 	}
 
 	public void registerCommands(Object classObject)

@@ -16,7 +16,7 @@ import java.util.List;
 public class CommandInfo
 {
     private final RegisteredCommand registeredCommand;
-    private final Parent            parent;
+    private final ParentCommand     parentCommand;
     private final CommandHandler    commandHandler;
     private final CommandSender     sender;
     private final String            command;
@@ -24,11 +24,11 @@ public class CommandInfo
     private final String            permission;
     private       List<String>      args;
 
-    public CommandInfo(RegisteredCommand registeredCommand, Parent parent, CommandHandler commandHandler,
+    public CommandInfo(RegisteredCommand registeredCommand, ParentCommand parentCommand, CommandHandler commandHandler,
                        CommandSender sender, String command, List<String> args, String usage, String permission)
     {
         this.registeredCommand = registeredCommand;
-        this.parent = parent;
+        this.parentCommand = parentCommand;
         this.commandHandler = commandHandler;
         this.sender = sender;
         this.command = command;
@@ -42,9 +42,9 @@ public class CommandInfo
         return registeredCommand;
     }
 
-    public Parent getParent()
+    public ParentCommand getParentCommand()
     {
-        return parent;
+        return parentCommand;
     }
 
     public CommandHandler getCommandHandler()

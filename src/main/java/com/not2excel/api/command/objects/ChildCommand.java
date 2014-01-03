@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
  * All rights Reserved
  * Please read included LICENSE file
  */
-public class ChildCommand extends Parent
+public class ChildCommand extends ParentCommand
 {
     private final CommandHandler commandHandler;
     protected String  command     = "";

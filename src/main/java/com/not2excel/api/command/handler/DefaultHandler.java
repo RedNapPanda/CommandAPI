@@ -2,7 +2,7 @@ package com.not2excel.api.command.handler;
 
 import com.not2excel.api.command.objects.ChildCommand;
 import com.not2excel.api.command.objects.CommandInfo;
-import com.not2excel.api.command.objects.Parent;
+import com.not2excel.api.command.objects.ParentCommand;
 import com.not2excel.api.command.objects.QueuedCommand;
 import com.not2excel.api.util.Colorizer;
 
@@ -28,23 +28,23 @@ public class DefaultHandler implements Handler
     public void handleCommand(CommandInfo info) throws CommandException
     {
         List<String> strings = info.getArgs();
-        Parent parent = info.getParent();
+        ParentCommand parentCommand = info.getParentCommand();
         String command = info.getCommand();
 
-        if (strings.size() == 0 || parent.getChildCommands().size() == 0)
+        if (strings.size() == 0 || parentCommand.getChildCommands().size() == 0)
         {
             if (queue != null)
             {
                 if (info.getArgsLength() < info.getCommandHandler().min())
                 {
                     info.getSender().sendMessage("Too few arguments.");
-                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
+                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
                     throw new CommandException("Too few arguments.");
                 }
                 if (info.getCommandHandler().max() != -1 && info.getArgsLength() > info.getCommandHandler().max())
                 {
                     info.getSender().sendMessage("Too many arguments.");
-                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
+                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
                     throw new CommandException("Too many arguments.");
                 }
                 if (!info.getSender().hasPermission(info.getCommandHandler().permission()))
@@ -67,16 +67,16 @@ public class DefaultHandler implements Handler
             }
             else
             {
-                info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
+                info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
             }
         }
         else if (strings.size() > 0)
         {
-            if (strings.get(0).equalsIgnoreCase("help") && !parent.getChildCommands().containsKey("help"))
+            if (strings.get(0).equalsIgnoreCase("help") && !parentCommand.getChildCommands().containsKey("help"))
             {
                 if (info.getUsage().equals(""))
                 {
-                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
+                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
                 }
                 else
                 {
@@ -84,14 +84,14 @@ public class DefaultHandler implements Handler
                 }
                 return;
             }
-            synchronized (parent.getChildCommands())
+            synchronized (parentCommand.getChildCommands())
             {
-                ChildCommand child = parent.getChildCommands().get(strings.get(0));
+                ChildCommand child = parentCommand.getChildCommands().get(strings.get(0));
                 if (child == null)
                 {
                     if (info.getUsage().equals(""))
                     {
-                        info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParent());
+                        info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
                     }
                     else
                     {
