@@ -324,7 +324,8 @@ public class CommandManager
 			if (commandHandler == null
 					|| method.getParameterTypes()[0] != CommandInfo.class)
 			{
-				return;
+				logger.log(method.getName() + " is not a CommandHandler");
+				continue;
 			}
 			logger.log("Method: " + method.getName() + " is a CommandHandler");
 			Object object = classObject;
