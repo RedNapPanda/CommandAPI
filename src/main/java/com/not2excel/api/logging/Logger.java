@@ -16,7 +16,7 @@ public class Logger<T>
     /**
      * Singleton instance
      */
-    private static volatile Logger instance;
+    private static volatile Logger<Object> instance;
 
     /**
      * SimpleDateFormat to format time for logging
@@ -31,14 +31,13 @@ public class Logger<T>
     /**
      * ConcurrentHashMap to hold everything that has been logged
      */
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private Map<String, String> organizedLogs = new ConcurrentHashMap<String, String>();
 
     /**
      * Returns the singleton instance
      * @return instance
      */
-    public static Logger getInstance()
+    public static Logger<Object> getInstance()
     {
         if (instance == null)
         { instance = getNewInstance(); }
@@ -49,9 +48,9 @@ public class Logger<T>
      * Creates a new instance of this class
      * @return instance of this class
      */
-    public static Logger getNewInstance()
+    public static Logger<Object> getNewInstance()
     {
-        return new Logger();
+        return new Logger<Object>();
     }
 
     /**
