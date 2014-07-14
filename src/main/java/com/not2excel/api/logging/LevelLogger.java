@@ -6,7 +6,7 @@ package com.not2excel.api.logging;
  * All rights Reserved
  * Please read included LICENSE file
  */
-public class LevelLogger extends Logger
+public class LevelLogger extends Logger<Object>
 {
     /**
      * Singleton instance
@@ -37,7 +37,6 @@ public class LevelLogger extends Logger
         return new LevelLogger();
     }
 
-    @SuppressWarnings("unchecked")
     public void log(final Object data)
     {
         if(timeStamped)
@@ -50,7 +49,6 @@ public class LevelLogger extends Logger
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void log(final LogType logType, final Object data)
     {
         if(timeStamped)
