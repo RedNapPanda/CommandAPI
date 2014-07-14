@@ -50,7 +50,6 @@ public class ClassEnumerator
      *         directory to parse
      * @return class array
      */
-    @SuppressWarnings("ConstantConditions")
     public List<Class<?>> getClassesFromLocation(File location)
     {
         final List<Class<?>> classes = new ArrayList<Class<?>>();
@@ -122,7 +121,8 @@ public class ClassEnumerator
      *
      * @return class array
      */
-    public Class[] getClassesFromThisJar(Object object)
+    @SuppressWarnings("resource")
+    public Class<?>[] getClassesFromThisJar(Object object)
     {
         final List<Class<?>> classes = new ArrayList<Class<?>>();
         ClassLoader classLoader = null;
@@ -207,7 +207,7 @@ public class ClassEnumerator
      * @return list of classes
      */
     @Deprecated
-    @SuppressWarnings({"unused", "deprecation"})
+    @SuppressWarnings("unused")
     private List<Class<?>> processDirectory(File directory, String append)
     {
         final List<Class<?>> classes = new ArrayList<Class<?>>();
