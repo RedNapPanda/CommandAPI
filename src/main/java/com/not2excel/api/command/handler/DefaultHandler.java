@@ -6,6 +6,7 @@ import com.not2excel.api.command.objects.ParentCommand;
 import com.not2excel.api.command.objects.QueuedCommand;
 import com.not2excel.api.util.Colorizer;
 
+import java.util.Collections;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
