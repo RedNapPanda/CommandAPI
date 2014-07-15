@@ -35,7 +35,75 @@ public class DefaultHandler implements Handler
         {
             if (queue != null)
             {
-                if (info.getArgsLength() < info.getCommandHandler().min())
+                try
+                {
+                    sendCommand(info); 
+                }
+                catch(CommandException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
+            }
+        }
+        else if (strings.size() > 0)
+        {
+            if (strings.get(0).equalsIgnoreCase("help") && !parentCommand.getChildCommands().containsKey("help"))
+            {
+                
+                if (info.getUsage().equals(""))
+                {
+                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
+                }
+                else
+                {
+                    info.getSender().sendMessage(info.getUsage());
+                }
+                return;
+            }
+            ChildCommand child = parentCommand.getChildCommands().get(strings.get(0));
+            if (child == null)
+            {
+                //needed to send parent command instead of throwing errors so that parent command can process args
+                try
+                {
+                    sendCommand(info); 
+                }
+                catch(CommandException e)
+                {
+                    e.printStackTrace();
+                }
+                return;
+            }
+            if (!child.checkPermission(info.getSender()))
+            {
+                Colorizer.send(info.getSender(), "<red>" + child.getCommandHandler().noPermission());
+                return;
+            }
+            CommandInfo cmdInfo = new CommandInfo(info.getRegisteredCommand(), child, child.getCommandHandler(),
+                                                  info.getSender(), strings.get(0),
+                                                  strings.size() == 1 ? 
+                                                  Collections.<String> emptyList() :
+                                                  strings.subList(1, strings.size() - 1),
+                                                  info.getUsage(),
+                                                  info.getPermission());
+            try
+            {
+                child.getHandler().handleCommand(cmdInfo);
+            }
+            catch (CommandException e)
+            {
+                Colorizer.send(info.getSender(), "<red>Failed to handle command properly.");
+            }
+        }
+    }
+    
+    private void sendCommand(CommandInfo info) throws CommandException
+    {
+        if (info.getArgsLength() < info.getCommandHandler().min())
                 {
                     info.getSender().sendMessage("Too few arguments.");
                     info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
@@ -64,62 +132,5 @@ public class DefaultHandler implements Handler
                 {
                     e.printStackTrace();
                 }
-            }
-            else
-            {
-                info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
-            }
-        }
-        else if (strings.size() > 0)
-        {
-            if (strings.get(0).equalsIgnoreCase("help") && !parentCommand.getChildCommands().containsKey("help"))
-            {
-                if (info.getUsage().equals(""))
-                {
-                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
-                }
-                else
-                {
-                    info.getSender().sendMessage(info.getUsage());
-                }
-                return;
-            }
-            synchronized (parentCommand.getChildCommands())
-            {
-                ChildCommand child = parentCommand.getChildCommands().get(strings.get(0));
-                if (child == null)
-                {
-                    if (info.getUsage().equals(""))
-                    {
-                        info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
-                    }
-                    else
-                    {
-                        info.getSender().sendMessage(info.getUsage());
-                    }
-                    return;
-                }
-                if (!child.checkPermission(info.getSender()))
-                {
-                    Colorizer.send(info.getSender(), "<red>" + child.getCommandHandler().noPermission());
-                    return;
-                }
-                CommandInfo cmdInfo = new CommandInfo(info.getRegisteredCommand(), child, child.getCommandHandler(),
-                                                      info.getSender(), strings.get(0),
-                                                      strings.size() == 1 ? 
-                                                      Collections.<String> emptyList() :
-                                                      strings.subList(1, strings.size() - 1),
-                                                      info.getUsage(),
-                                                      info.getPermission());
-                try
-                {
-                    child.getHandler().handleCommand(cmdInfo);
-                }
-                catch (CommandException e)
-                {
-                    Colorizer.send(info.getSender(), "<red>Failed to handle command properly.");
-                }
-            }
-        }
     }
 }
