@@ -11,6 +11,9 @@ import org.bukkit.command.CommandSender;
  */
 public class CommandException extends Exception
 {
+    
+    private static final long serialVersionUID = 7841254778605849087L;
+    
     public CommandException(String s)
     {
         super(s);
