@@ -38,7 +38,7 @@ public class DefaultHandler implements Handler
             {
                 try
                 {
-                    sendCommand(info); 
+                    sendCommand(info, command); 
                 }
                 catch(CommandException e)
                 {
@@ -71,7 +71,7 @@ public class DefaultHandler implements Handler
                 //needed to send parent command instead of throwing errors so that parent command can process args
                 try
                 {
-                    sendCommand(info); 
+                    sendCommand(info, command); 
                 }
                 catch(CommandException e)
                 {
@@ -102,7 +102,7 @@ public class DefaultHandler implements Handler
         }
     }
     
-    private void sendCommand(CommandInfo info) throws CommandException
+    private void sendCommand(CommandInfo info, String command) throws CommandException
     {
         if (info.getArgsLength() < info.getCommandHandler().min())
                 {
