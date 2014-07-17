@@ -316,7 +316,64 @@ public class CommandManager
 		{
 			return;
 		}
-		for (Method method : classObject.getClass().getDeclaredMethods())
+		
+		//Methods to loop through; Contains the commands to register.
+		List<Method> methods = new LinkedList<Method>(Arrays.asList(classObject.getClass().getDeclaredMethods()));
+		
+		//Little hack to insert clones of existing methods in the methods-List to get toplevel-aliases working.
+		for(Method method : classObject.getClass().getDeclaredMethods()){
+			
+			//If the method does not have a CommandHandler Annotation, continue with the loop.
+			final CommandHandler commandHandler = method.getAnnotation(CommandHandler.class);
+			if (commandHandler == null || method.getParameterTypes()[0] != CommandInfo.class) continue;
+			if(commandHandler.toplevel_aliases().length < 1) continue;
+			
+			//Put a method in the methods-list for every toplevel-alias
+			for(final String tlc : commandHandler.toplevel_aliases()){
+				
+				//Annotation where the 'Command' is changed to the toplevel-alias but everything else stays the same.
+				Annotation newCommandHandler = new CommandHandler() {
+					public Class<? extends java.lang.annotation.Annotation> annotationType() {return commandHandler.annotationType();}
+					public String usage() {return commandHandler.usage();}
+					public String[] toplevel_aliases() {return new String[]{};}
+					public String permission() {return commandHandler.permission();}
+					public String noPermission() {return commandHandler.noPermission();}
+					public int min() {return commandHandler.min();}
+					public int max() {return commandHandler.max();}
+					public String description() {return commandHandler.description();}
+					public String command() {return tlc;}
+					public String[] aliases() {return commandHandler.aliases();}
+				};
+				
+				//Copy the origin-method.
+				Method topLevelCopy = ReflectionUtils.copyMethod(method);
+				//Add the modified annotation
+				try {
+					//Set field declaredAnnotations accessible
+					Field field = Method.class.getDeclaredField("declaredAnnotations");
+					field.setAccessible(true);
+					
+					//Intantiate field
+					topLevelCopy.getAnnotations();
+					
+					//Add it
+					@SuppressWarnings("unchecked")
+					Map<Class<? extends Annotation>, Annotation> annotations = (Map<Class<? extends Annotation>, Annotation>) field.get(topLevelCopy);
+					if(annotations == null) logger.log("Annotations-Field for Method " + topLevelCopy.getName() + " is null.");
+					annotations.put(CommandHandler.class, newCommandHandler);
+					methods.add(topLevelCopy);
+				} catch (Exception e){
+					logger.log("Error while trying to manipulate Annotations of the Method");
+					logger.log("---------------------------------");
+					e.printStackTrace();
+					logger.log("---------------------------------");
+					
+					continue;
+				}
+			}
+		}
+		
+		for (Method method : methods)
 		{
 			logger.log("Testing if method: " + method.getName()
 					+ " is a CommandHandler");
