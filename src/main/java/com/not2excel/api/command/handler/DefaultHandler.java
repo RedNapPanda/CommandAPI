@@ -107,13 +107,13 @@ public class DefaultHandler implements Handler
         if (info.getArgsLength() < info.getCommandHandler().min())
                 {
                     info.getSender().sendMessage("Too few arguments.");
-                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
+                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), info.getCommand(), info.getParentCommand());
                     throw new CommandException("Too few arguments.");
                 }
                 if (info.getCommandHandler().max() != -1 && info.getArgsLength() > info.getCommandHandler().max())
                 {
                     info.getSender().sendMessage("Too many arguments.");
-                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
+                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), info.getCommand(), info.getParentCommand());
                     throw new CommandException("Too many arguments.");
                 }
                 if (!info.getSender().hasPermission(info.getCommandHandler().permission()))
