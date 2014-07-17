@@ -21,4 +21,15 @@ public class ReflectionUtils
         objectField.setAccessible(false);
         return result;
     }
+    
+     public static Method copyMethod(Method toCopy){
+		try{
+			Method copyMethod = Method.class.getDeclaredMethod("copy", (Class<?>[])null);
+			copyMethod.setAccessible(true);
+			return (Method) copyMethod.invoke(toCopy, (Object[]) null);
+		}catch(Exception e){
+			System.out.println("Exception while copying Method '" + toCopy.getName() + "'. Returning the method passed in arguments.");
+			return toCopy;
+		}
+	}
 }
