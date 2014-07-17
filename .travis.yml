@@ -1,8 +1,8 @@
 language: java
 jdk:
 - oraclejdk7
-before_install: git clone -b travis `git config --get remote.origin.url` target/travis
-script: mvn clean deploy --settings target/travis/settings.xml
+before_install: git clone -b travis `git config --get remote.origin.url`
+script: mvn clean deploy --settings settings.xml
 notifications:
   email: false
 env:
