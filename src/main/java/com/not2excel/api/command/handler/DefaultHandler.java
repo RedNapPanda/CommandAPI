@@ -1,5 +1,6 @@
 package com.not2excel.api.command.handler;
 
+import com.not2excel.api.command.CommandHandler;
 import com.not2excel.api.command.objects.ChildCommand;
 import com.not2excel.api.command.objects.CommandInfo;
 import com.not2excel.api.command.objects.ParentCommand;
@@ -11,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
- * @author Richmond Steele
+ * @author Richmond Steele, William Reed
  * @since 12/18/13
  * All rights Reserved
  * Please read included LICENSE file
@@ -104,34 +105,43 @@ public class DefaultHandler implements Handler
     
     private void sendCommand(CommandInfo info) throws CommandException
     {
+    	CommandHandler ch = queue.getMethod().getAnnotation(CommandHandler.class);
+    	boolean playerOnly = ch.playerOnly();
+    	
         if (info.getArgsLength() < info.getCommandHandler().min())
-                {
-                    info.getSender().sendMessage("Too few arguments.");
-                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), info.getCommand(), info.getParentCommand());
-                    throw new CommandException("Too few arguments.");
-                }
-                if (info.getCommandHandler().max() != -1 && info.getArgsLength() > info.getCommandHandler().max())
-                {
-                    info.getSender().sendMessage("Too many arguments.");
-                    info.getRegisteredCommand().displayDefaultUsage(info.getSender(), info.getCommand(), info.getParentCommand());
-                    throw new CommandException("Too many arguments.");
-                }
-                if (!info.getSender().hasPermission(info.getCommandHandler().permission()))
-                {
-                    Colorizer.send(info.getSender(), "<red>" + info.getCommandHandler().noPermission());
-                    return;
-                }
-                try
-                {
-                    queue.getMethod().invoke(queue.getObject(), info);
-                }
-                catch (IllegalAccessException e)
-                {
-                    e.printStackTrace();
-                }
-                catch (InvocationTargetException e)
-                {
-                    e.printStackTrace();
-                }
+        {
+            info.getSender().sendMessage("Too few arguments.");
+            info.getRegisteredCommand().displayDefaultUsage(info.getSender(), info.getCommand(), info.getParentCommand());
+            throw new CommandException("Too few arguments.");
+        }
+        if (info.getCommandHandler().max() != -1 && info.getArgsLength() > info.getCommandHandler().max())
+        {
+            info.getSender().sendMessage("Too many arguments.");
+            info.getRegisteredCommand().displayDefaultUsage(info.getSender(), info.getCommand(), info.getParentCommand());
+            throw new CommandException("Too many arguments.");
+        }
+        if (!info.getSender().hasPermission(info.getCommandHandler().permission()))
+        {
+            Colorizer.send(info.getSender(), "<red>" + info.getCommandHandler().noPermission());
+            return;
+        }
+        if(playerOnly && !info.isPlayer())
+        {
+      	//maybe make this configurable some how
+        	info.getSender().sendMessage("This command can only be executed in game.");
+            return;
+        }
+        try
+        {
+            queue.getMethod().invoke(queue.getObject(), info);
+        }
+            catch (IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+            catch (InvocationTargetException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Richmond Steele
+ * @author Richmond Steele, William Reed
  * @since 12/16/13
  * All rights Reserved
  * Please read included LICENSE file
@@ -78,4 +78,10 @@ public @interface CommandHandler
      * @return max
      */
     int max() default -1;
+    
+    /**
+     * Determines if you want the plugin to be only executed by a player and not on command line
+     * @return true if you want this only to be used by an in game player
+     */
+    boolean playerOnly() default false;
 }
