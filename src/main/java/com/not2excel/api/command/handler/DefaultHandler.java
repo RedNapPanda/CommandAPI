@@ -127,9 +127,9 @@ public class DefaultHandler implements Handler
         }
         if(playerOnly && !info.isPlayer())
         {
-      	//maybe make this configurable some how
-        	info.getSender().sendMessage("This command can only be executed in game.");
-            return;
+             //maybe make this configurable some how
+             info.getSender().sendMessage("This command can only be executed in game.");
+             return;
         }
         try
         {
