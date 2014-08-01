@@ -88,7 +88,7 @@ public class DefaultHandler implements Handler
                                                   info.getSender(), strings.get(0),
                                                   strings.size() == 1 ? 
                                                   Collections.<String> emptyList() :
-                                                  strings.subList(1, strings.size() - 1),
+                                                  strings.subList(1, strings.size()),
                                                   info.getUsage(),
                                                   info.getPermission());
             try

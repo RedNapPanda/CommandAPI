@@ -19,7 +19,35 @@ package com.not2excel.api;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class CommandAPI extends JavaPlugin
+public class CommandAPI extends JavaPlugin //implements CommandListener
 {
     //to make it a plugin
+//    @Override
+//    public void onEnable()
+//    {
+//        CommandManager manager = new CommandManager(this);
+//        manager.registerCommands(this);
+//    }
+
+//    @CommandHandler(command = "test")
+//    public void onTest(CommandInfo info)
+//    {
+//        System.out.println("Command: " + info.getCommand());
+//        System.out.println("Arg amounts: " + info.getArgsLength() + "\n Args:");
+//        for (String s : info.getArgs())
+//        {
+//            System.out.println(s);
+//        }
+//    }
+//
+//    @CommandHandler(command = "test.add")
+//    public void onTestAdd(CommandInfo info)
+//    {
+//        System.out.println("Command: " + info.getCommand());
+//        System.out.println("Arg amounts: " + info.getArgsLength() + "\n Args:");
+//        for (String s : info.getArgs())
+//        {
+//            System.out.println(s);
+//        }
+//    }
 }
