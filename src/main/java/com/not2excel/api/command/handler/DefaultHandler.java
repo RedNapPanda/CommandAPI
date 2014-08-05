@@ -39,7 +39,7 @@ public class DefaultHandler implements Handler
             {
                 try
                 {
-                    sendCommand(info); 
+                    sendCommand(info);
                 }
                 catch(CommandException e)
                 {
@@ -55,7 +55,7 @@ public class DefaultHandler implements Handler
         {
             if (strings.get(0).equalsIgnoreCase("help") && !parentCommand.getChildCommands().containsKey("help"))
             {
-                
+
                 if (info.getUsage().equals(""))
                 {
                     info.getRegisteredCommand().displayDefaultUsage(info.getSender(), command, info.getParentCommand());
@@ -72,7 +72,7 @@ public class DefaultHandler implements Handler
                 //needed to send parent command instead of throwing errors so that parent command can process args
                 try
                 {
-                    sendCommand(info); 
+                    sendCommand(info);
                 }
                 catch(CommandException e)
                 {
@@ -87,7 +87,7 @@ public class DefaultHandler implements Handler
             }
             CommandInfo cmdInfo = new CommandInfo(info.getRegisteredCommand(), child, child.getCommandHandler(),
                                                   info.getSender(), strings.get(0),
-                                                  strings.size() == 1 ? 
+                                                  strings.size() == 1 ?
                                                   Collections.<String> emptyList() :
                                                   strings.subList(1, strings.size()),
                                                   info.getUsage(),
@@ -102,23 +102,25 @@ public class DefaultHandler implements Handler
             }
         }
     }
-    
+
     private void sendCommand(CommandInfo info) throws CommandException
     {
     	CommandHandler ch = queue.getMethod().getAnnotation(CommandHandler.class);
     	boolean playerOnly = ch.playerOnly();
-    	
+
         if (info.getArgsLength() < info.getCommandHandler().min())
         {
             info.getSender().sendMessage("Too few arguments.");
             info.getRegisteredCommand().displayDefaultUsage(info.getSender(), info.getCommand(), info.getParentCommand());
-            throw new CommandException("Too few arguments.");
+            return;
+//            throw new CommandException("Too few arguments.");
         }
         if (info.getCommandHandler().max() != -1 && info.getArgsLength() > info.getCommandHandler().max())
         {
             info.getSender().sendMessage("Too many arguments.");
             info.getRegisteredCommand().displayDefaultUsage(info.getSender(), info.getCommand(), info.getParentCommand());
-            throw new CommandException("Too many arguments.");
+            return;
+//            throw new CommandException("Too many arguments.");
         }
         if (!info.getSender().hasPermission(info.getCommandHandler().permission()))
         {
