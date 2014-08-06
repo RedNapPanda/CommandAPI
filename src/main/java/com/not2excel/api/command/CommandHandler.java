@@ -33,6 +33,15 @@ public @interface CommandHandler
      * @return command aliases
      */
     String[] aliases() default {};
+    
+    /**
+     * TopLevel-Aliases of the command
+     * /test2 => /test
+     * /test set2 => /set_test
+     *
+     * @return command toplevel-aliases
+     */
+    String[] toplevel_aliases() default {};
 
     /**
      * Permission to use this command
