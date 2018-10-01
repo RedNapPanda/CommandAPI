@@ -8,7 +8,7 @@ import java.util.Random;
  * All rights Reserved
  * Please read included LICENSE file
  */
-public class StringUtil
+public final class StringUtil
 {
     private static final Random random = new Random();
 
