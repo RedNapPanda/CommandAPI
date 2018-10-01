@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * All rights Reserved
  * Please read included LICENSE file
  */
-public class Colorizer
+public final class Colorizer
 {
     private static final int MAX_SIZE = 1000;
     private static final Map<String, String>    colorizedStrings = new ConcurrentHashMap<String, String>();
